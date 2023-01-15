@@ -15,7 +15,7 @@ export default function DualPage() {
                 Error('The Practical Application of Dual Cycle Ratio cannot be 0 or less than 0')
             } else {
                 Title("Dual Cycle Efficiency Value is")
-                Output(((1-(((Math.pow(cut_off_ratio,GAMMA)*pressure_ratio)-1)/(Math.pow(compression_ratio,(GAMMA-1))*((pressure_ratio-1)+(GAMMA*pressure_ratio*(cut_off_ratio-1))))))*100).toFixed(2))
+                Output(`${((1-(((Math.pow(cut_off_ratio,GAMMA)*pressure_ratio)-1)/(Math.pow(compression_ratio,(GAMMA-1))*((pressure_ratio-1)+(GAMMA*pressure_ratio*(cut_off_ratio-1))))))*100).toFixed(2)} %`)
                 Error()
             }
         }

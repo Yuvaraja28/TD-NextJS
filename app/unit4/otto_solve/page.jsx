@@ -297,6 +297,7 @@ export default function OttoSolvingPage(res) {
             </tr>
         );
     }
+    console.log(res.searchParams)
     let otto = new Otto(res.searchParams)
     return (
     <div className='mainframe'>

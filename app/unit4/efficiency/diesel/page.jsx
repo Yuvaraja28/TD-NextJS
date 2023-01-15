@@ -14,7 +14,7 @@ export default function DieselPage() {
                 Error('The Practical Application of Diesel Cycle Ratio cannot be 0 or less than 0')
             } else {
                 Title("Diesel Cycle Efficiency Value is")
-                Output(((1-((Math.pow(cut_off_ratio,GAMMA)-1)/((GAMMA*Math.pow(compression_ratio,(GAMMA-1)))*(cut_off_ratio-1))))*100).toFixed(2))
+                Output(`${((1-((Math.pow(cut_off_ratio,GAMMA)-1)/((GAMMA*Math.pow(compression_ratio,(GAMMA-1)))*(cut_off_ratio-1))))*100).toFixed(2)} %`)
                 Error()
             }
         }

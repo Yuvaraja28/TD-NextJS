@@ -13,7 +13,7 @@ export default function BraytonPage() {
                 Error('The Practical Application of Brayton Cycle Ratio cannot be 0 or less than 0')
             } else {
                 Title("Brayton Cycle Efficiency Value is")
-                Output(((1-(1/(Math.pow(pressure_ratio,((GAMMA-1)/GAMMA)))))*100).toFixed(2))
+                Output(`${((1-(1/(Math.pow(pressure_ratio,((GAMMA-1)/GAMMA)))))*100).toFixed(2)} %`)
                 Error()
             }
         }

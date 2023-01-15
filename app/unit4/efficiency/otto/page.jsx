@@ -13,7 +13,7 @@ export default function OttoPage() {
                 Error('The Practical Application of Otto Cycle Ratio cannot be 0 or less than 0')
             } else {
                 Title("Otto Cycle Efficiency Value is")
-                Output(((1-(1/(Math.pow(parseFloat(compression_ratio),(GAMMA-1)))))*100).toFixed(2))
+                Output(`${((1-(1/(Math.pow(parseFloat(compression_ratio),(GAMMA-1)))))*100).toFixed(2)} %`)
                 Error()
             }
         }

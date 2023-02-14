@@ -21,7 +21,6 @@ export default function DieselPage() {
     }
     return (
         <div className="mainframe">
-            <a className="headline"></a>
             <span className="headline">Diesel Cycle Efficiency</span>
             <input placeholder="Compression Ratio" name="compression_ratio" id="compression_ratio" type="number" step="0.1" />
             <input placeholder="Cut-Off Ratio" name="cut_off_ratio" id="cut_off_ratio" type="number" step="0.1" />

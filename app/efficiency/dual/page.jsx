@@ -22,7 +22,7 @@ export default function DualPage() {
     }
     return (
         <div className="mainframe">
-            <span className="headline-2 head-glow">Dual Cycle Efficiency</span>
+            <span className="headline">Dual Cycle Efficiency</span>
             <input placeholder="Compression Ratio" name="compression_ratio" id="compression_ratio" type="number" step="0.1" />
             <input placeholder="Cut-Off Ratio" name="cut_off_ratio" id="cut_off_ratio" type="number" step="0.1" />
             <input placeholder="Pressure Ratio" name="pressure_ratio" id="pressure_ratio" type="number" step="0.1" />

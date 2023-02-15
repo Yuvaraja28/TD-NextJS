@@ -255,12 +255,15 @@ class Otto {
             if (key.startsWith("c_")) {
                 if (this[key] === "c") {
                     this[key.slice(2)] = this[key.slice(2)] + 273.15
+                    this[key] = "k"
                 }
                 if (this[key] === "mpa") {
                     this[key.slice(2)] = this[key.slice(2)] * 1000
+                    this[key] = "kpa"
                 }
                 if (this[key] === "bar") {
                     this[key.slice(2)] = this[key.slice(2)] * 100
+                    this[key] = "kpa"
                 }
             }
         }

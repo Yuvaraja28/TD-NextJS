@@ -1,3 +1,8 @@
+import './globals.css'
 export default function Loading() {
-    return <p>loading</p>
+    return (
+        <div className='mainframe'>
+            <span className='headline'>Loading...</span>
+        </div>
+    )
 }

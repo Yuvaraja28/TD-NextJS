@@ -4,17 +4,20 @@ const RCV = 0.287
 const GAMMA = 1.4
 class Otto {
     constructor({t1, t2, t3, t4, p1, p2, p3, p4, v1, v2, v3, v4,
-        m, r, Qs, Qr, wd, efficiency, mep,
+        m, r, Qs, Qr, wd, efficiency, efficiency_percent, mep,
         c_t1, c_t2, c_t3, c_t4, c_p1, c_p2, c_p3, c_p4,
-        c_v1, c_v2, c_v3, c_v4, c_Qs, c_Qr, c_wd, c_mep, c_m}) {
-            console.log(t1)
+        c_v1, c_v2, c_v3, c_v4, c_qs, c_qr, c_wd, c_mep, c_m}) {
         this.t1 = t1; this.t2 = t2; this.t3 = t3; this.t4 = t4
         this.p1 = p1; this.p2 = p2; this.p3 = p3; this.p4 = p4
         this.v1 = v1; this.v2 = v2; this.v3 = v3; this.v4 = v4
         this.c_t1 = c_t1, this.c_t2 = c_t2, this.c_t3 = c_t3, this.c_t4 = c_t4,
         this.c_p1 = c_p1, this.c_p2 = c_p2, this.c_p3 = c_p3, this.c_p4 = c_p4,
         this.c_v1 = c_v1, this.c_v2 = c_v2, this.c_v3 = c_v3, this.c_v4 = c_v4,
-        this.c_Qs = c_Qs, this.c_Qr = c_Qr, this.c_wd = c_wd, this.c_mep = c_mep, this.c_m = c_m
+        this.c_qs = c_qs, this.c_qr = c_qr, this.c_wd = c_wd, this.c_mep = c_mep, this.c_m = c_m
+        this.r = r, this.Qs = Qs, this.Qr = Qr, this.wd = wd, this.mep = mep
+        this.m = m, this.efficiency = efficiency, this.efficiency_percent = efficiency_percent 
+        console.log(this)
+        this.convert()
         if ((this.v1 == undefined) && (this.v4 != undefined)) {
             this.v1 = this.v4
         }
@@ -27,20 +30,15 @@ class Otto {
         if ((this.v2 != undefined) && (this.v3 == undefined)) {
             this.v3 = this.v2
         }
-        this.r = r; this.Qs = Qs; this.Qr = Qr; this.wd = wd; this.mep = mep
         if (m == undefined) {
             this.m = 1
-        } else {
-            this.m = m
         }
-        if (efficiency == undefined) {
-            this.efficiency = efficiency
-        } else {
-            this.efficiency = (efficiency / 100)
+        if ((this.efficiency == undefined) && (this.efficiency_percent != undefined)) {
+            this.efficiency = (this.efficiency_percent / 100)
         }
-        this.efficiency_percent = efficiency
-        this.convert()
+        console.log(this)
         this.ai_calculate()
+        console.log(this)
         this.value()
     }
     R() {
@@ -249,6 +247,9 @@ class Otto {
     }
     convert() {
         for (var key in this) {
+            if (this[key] == "") {
+                this[key] = undefined
+            }
             if ((this[key] != undefined) && (!key.startsWith("c_"))) {
                 this[key] = parseFloat(this[key])
             }
@@ -269,26 +270,13 @@ class Otto {
         for (var key in this) {
             if (this[key] == undefined) {
                 this[key] = "-"
-            } else {
-                if (key.startsWith('p') || key.startsWith('mep')) {
-                    this[key] = `${this[key].toFixed(2)} k Pa`
-                } else if (key.startsWith('t')) {
-                    this[key] = `${this[key].toFixed(2)} K`
-                } else if (key.startsWith('v')) {
-                    this[key] = `${this[key].toFixed(2)} m³`
-                } else if (key.startsWith('Q') || key.startsWith('wd') ) {
-                    this[key] = `${this[key].toFixed(2)} kJ/kg`
-                } else if (key.startsWith('efficiency') ) {
-                    this[key] = `${this[key].toFixed(2)} %`
-                } else if (key.startsWith('r') ) {
-                    this[key] = `${this[key].toFixed(2)}`
-                }
-
+            } else if (!key.startsWith("c_")) {
+                this[key] = this[key].toFixed(2)
             }
         }
     }
 }
 export default function handler(req, res) {
   if (req.method != "POST") { return res.status(404).send("Not Enough Data") }
-  return res.status(200).json(new Otto(req.body))
+  return res.status(200).json(new Otto(JSON.parse(req.body)))
 }

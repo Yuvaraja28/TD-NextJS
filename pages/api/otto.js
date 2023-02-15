@@ -16,7 +16,6 @@ class Otto {
         this.c_qs = c_qs, this.c_qr = c_qr, this.c_wd = c_wd, this.c_mep = c_mep, this.c_m = c_m
         this.r = r, this.Qs = Qs, this.Qr = Qr, this.wd = wd, this.mep = mep
         this.m = m, this.efficiency = efficiency, this.efficiency_percent = efficiency_percent 
-        console.log(this)
         this.convert()
         if ((this.v1 === undefined) && (this.v4 !== undefined)) {
             this.v1 = this.v4
@@ -36,9 +35,7 @@ class Otto {
         if ((this.efficiency === undefined) && (this.efficiency_percent !== undefined)) {
             this.efficiency = (this.efficiency_percent / 100)
         }
-        console.log(this)
         this.ai_calculate()
-        console.log(this)
         this.value()
     }
     R() {

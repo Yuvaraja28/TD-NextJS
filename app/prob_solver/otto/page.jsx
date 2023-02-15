@@ -8,8 +8,8 @@ export default function OttoProblemPage() {
         for (var i = 0; i < option_array.length; i++) { datas[option_array[i].name] = option_array[i].value }
         let otto_response = await fetch("/api/otto", {method: 'POST', body: JSON.stringify(datas)})
         let otto_datas = await otto_response.json()
-        console.log(otto_datas)
         for (var i = 0; i < input_array.length; i++) { if (otto_datas[input_array[i].name] != "-") { input_array[i].value = otto_datas[input_array[i].name] } }
+        for (var i = 0; i < option_array.length; i++) { if (otto_datas[option_array[i].name] != "-") { option_array[i].value = otto_datas[option_array[i].name] } }
     }
     async function Clear() {
         let input_array = document.getElementsByClassName("full-problem-input")

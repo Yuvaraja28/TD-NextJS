@@ -35,6 +35,10 @@ class Otto {
         if ((this.efficiency === undefined) && (this.efficiency_percent !== undefined)) {
             this.efficiency = (this.efficiency_percent / 100)
         }
+        if ((this.r !== undefined) && (this.efficiency_percent !== undefined)) {
+            this.efficiency = undefined
+            this.efficiency_percent = undefined
+        }
         this.ai_calculate()
         this.value()
     }
@@ -74,6 +78,9 @@ class Otto {
                 this.t1 = this.t2 / (this.r ** (GAMMA - 1))
                 this.T2()
                 this.T4()
+            } else if ((this.Qs !== undefined) && (this.t4 !== undefined)) {
+                this.t1 = this.t4 - (this.Qr / (this.m * Cv))
+                this.T2()
             }
         }
     }
@@ -112,6 +119,9 @@ class Otto {
                 this.T3()
             } else if ((this.t3 !== undefined) && (this.r !== undefined)) {
                 this.t4 = this.t3 / (this.r ** (GAMMA - 1))
+                this.T3()
+            } else if ((this.Qs !== undefined) && (this.t1 !== undefined)) {
+                this.t4 = this.t1 - (this.Qr / (this.m * Cv))
                 this.T3()
             }
         }
@@ -201,6 +211,7 @@ class Otto {
         if (this.Qr === undefined) {
             if ((this.t4 !== undefined) && (this.t1 !== undefined)) {
                 this.Qr = this.m * Cv * (this.t4 - this.t1)
+                this.WD()
             }
         }
     }
@@ -209,6 +220,8 @@ class Otto {
             if ((this.efficiency !== undefined) && (this.Qs !== undefined)) {
                 this.wd = this.efficiency * this.Qs
                 this.MEP()
+            } else if ((this.Qs !== undefined) && (this.Qr !== undefined)) {
+                this.wd = this.Qs - this.Qr
             }
         }
     }
@@ -224,10 +237,9 @@ class Otto {
             if (this.r !== undefined) {
                 this.efficiency = 1 - (1 / (this.r ** (GAMMA - 1)))
                 this.efficiency_percent = this.efficiency * 100
-                if ((this.Qs !== undefined) && (this.wd !== undefined)) {
-                    this.efficiency = this.wd / this.Qs
-                    this.efficiency_percent = this.efficiency * 100
-                }
+            } else if ((this.Qs !== undefined) && (this.wd !== undefined)) {
+                this.efficiency = this.wd / this.Qs
+                this.efficiency_percent = this.efficiency * 100
             }
         }
     }
@@ -264,6 +276,10 @@ class Otto {
                 if (this[key] === "bar") {
                     this[key.slice(2)] = this[key.slice(2)] * 100
                     this[key] = "kpa"
+                }
+                if (this[key] === "g") {
+                    this[key.slice(2)] = this[key.slice(2)] / 1000
+                    this[key] = "kg"
                 }
             }
         }

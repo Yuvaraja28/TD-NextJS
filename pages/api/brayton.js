@@ -2,7 +2,7 @@ const Cp = 1.005
 const Cv = 0.718
 const RCV = 0.287
 const GAMMA = 1.4
-class Otto {
+class Brayton {
     constructor({t1, t2, t3, t4, p1, p2, p3, p4, m, r, Qs, Qr, wd, 
         efficiency, efficiency_percent, mep,
         c_t1, c_t2, c_t3, c_t4, c_p1, c_p2, c_p3, c_p4,
@@ -203,6 +203,6 @@ class Otto {
 }
 export default function handler(req, res) {
   if (req.method !== "POST") { return res.status(404).send("Not Enough Data") }
-  try { return res.status(200).json(new Otto(JSON.parse(req.body))) }
+  try { return res.status(200).json(new Brayton(JSON.parse(req.body))) }
   catch { return res.status(500).send('Error') }
 }

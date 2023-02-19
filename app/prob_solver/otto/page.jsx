@@ -21,8 +21,8 @@ export default function OttoProblemPage() {
             <span className="headline headline2">Enter the Known Values</span>
             <div className="full-problem-container">
                 <div className='full-problem-box'>
-                    <span className='full-problem-label'>Ratio (r)</span>
-                    <input className='full-problem-input' placeholder="Ratio" name="r" type="number" step="0.1" />
+                    <span className='full-problem-label'>Compression Ratio (r)</span>
+                    <input className='full-problem-input' placeholder="Compression Ratio" name="r" type="number" step="0.1" />
                     <br />
                     <span className='full-problem-label'>Efficiency (%)</span>
                     <input className='full-problem-input' placeholder="%" name="efficiency_percent" type="number" step="0.1" />

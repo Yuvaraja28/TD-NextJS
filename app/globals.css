@@ -38,12 +38,6 @@ body::-webkit-scrollbar-thumb {
     background-color: #18122B;
     border-radius: 10px;
 }
-.topbar.top {
-    border-radius: 10px 10px 0 0;
-}
-.topbar.down {
-    border-radius: 0 0 10px 10px;
-}
 .topbar .logo {
     margin: 8px;
     margin-left: 12px;
@@ -133,7 +127,7 @@ body::-webkit-scrollbar-thumb {
     cursor: pointer;
     box-shadow: #18122B 0px 5px 15px;
     text-decoration: none;
-    width: 50%;
+    width: 40%;
 }
 .mainframe select {
     font-family: "poppins";
@@ -251,7 +245,9 @@ footer .link-glow {
     .mainframe input {
         width: 80%;
     }
-    select {
-        margin-left: 5px;
+}
+@media only screen and (max-width: 300px) {
+    .container {
+        width: 100%;
     }
 }

@@ -18,16 +18,16 @@ body {
 }
 
 body::-webkit-scrollbar {
-    width: 0.50rem;
+    width: 0.65rem;
 }
 body::-webkit-scrollbar-track {
-    border-radius: 25px;
     background: #1e1e24;
 }
 body::-webkit-scrollbar-thumb {
-    border-radius: 25px;
+    border-radius: 2px;
     background: #635985;
 }
+
 .topbar {
     display: flex;
     flex-direction: row;
@@ -244,6 +244,12 @@ footer .link-glow {
 @media only screen and (max-width: 600px) {
     .mainframe {
         width: 90%;
+    }
+    .mainframe .full-problem-box {
+        width: 80%;
+    }
+    .mainframe input {
+        width: 80%;
     }
     select {
         margin-left: 5px;

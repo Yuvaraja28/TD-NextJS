@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
             height="45" />
           <a className='college-name'>Manakula Vinayagar Institute of Technology SCIMIT-23</a>
         </div>
-        <div className='topbar down'>
+        <div className='topbar'>
           <a className='project-name'>Thermodynamics Problem Solver</a>
         </div>
         <div className='container'>

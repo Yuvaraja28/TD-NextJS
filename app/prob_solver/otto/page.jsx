@@ -15,6 +15,39 @@ export default function OttoProblemPage() {
         let input_array = document.getElementsByClassName("full-problem-input")
         for (var i = 0; i < input_array.length; i++) { input_array[i].value = '' }
     }
+    function Temperature( { no } ) {
+        return ( 
+            <div className="full-problem-box-inner">
+                <input className='full-problem-input' placeholder={`T${no}`} name={`t${no}`} type="number" step="0.1" />
+                <select name={`c_t${no}`}>
+                    <option value="k">K</option>
+                    <option value="c">°C</option>
+                </select>
+            </div>
+        )
+    }
+    function Pressure( { no } ) {
+        return ( 
+            <div className="full-problem-box-inner">
+                <input className='full-problem-input' placeholder={`P${no}`} name={`p${no}`} type="number" step="0.1" />            
+                <select name={`c_p${no}`}>
+                    <option value="kpa">k Pa</option>
+                    <option value="mpa">M Pa</option>
+                    <option value="bar">Bar</option>
+                </select>
+            </div>
+        )
+    }
+    function Volume( { no } ) {
+        return (
+            <div className="full-problem-box-inner">
+                <input className='full-problem-input' placeholder={`V${no}`} name={`v${no}`} type="number" step="0.1" />
+                <select name={`c_v${no}`}>
+                    <option value="m3">m³</option>
+                </select>
+            </div>
+        )
+    }
     return (
         <div className="mainframe">
             <span className="headline">Otto Problem Solver</span>
@@ -29,96 +62,24 @@ export default function OttoProblemPage() {
                 </div>
                 <div className='full-problem-box'>
                     <span className='full-problem-label'>Temperature</span>
-                    <div className="full-problem-box-inner">
-                        <input className='full-problem-input' placeholder="T1" name="t1" type="number" step="0.1" />
-                        <select name="c_t1">
-                            <option value="k">K</option>
-                            <option value="c">°C</option>
-                        </select>
-                    </div>
-                    <div className="full-problem-box-inner">
-                        <input className='full-problem-input' placeholder="T2" name="t2" type="number" step="0.1" />
-                        <select name="c_t2">
-                            <option value="k">K</option>
-                            <option value="c">°C</option>
-                        </select>
-                    </div>
-                    <div className="full-problem-box-inner">
-                        <input className='full-problem-input' placeholder="T3" name="t3" type="number" step="0.1" />
-                        <select name="c_t3">
-                            <option value="k">K</option>
-                            <option value="c">°C</option>
-                        </select>
-                    </div>
-                    <div className="full-problem-box-inner">
-                        <input className='full-problem-input' placeholder="T4" name="t4" type="number" step="0.1" />
-                        <select name="c_t4">
-                            <option value="k">K</option>
-                            <option value="c">°C</option>
-                        </select>
-                    </div>
+                    <Temperature no="1" />
+                    <Temperature no="2" />
+                    <Temperature no="3" />
+                    <Temperature no="4" />
                 </div>
                 <div className='full-problem-box'>
                     <span className='full-problem-label'>Pressure</span>
-                    <div className="full-problem-box-inner">
-                        <input className='full-problem-input' placeholder="P1" name="p1" type="number" step="0.1" />
-                        <select name="c_p1">
-                            <option value="kpa">k Pa</option>
-                            <option value="mpa">M Pa</option>
-                            <option value="bar">Bar</option>
-                        </select>
-                    </div>
-                    <div className="full-problem-box-inner">
-                        <input className='full-problem-input' placeholder="P2" name="p2" type="number" step="0.1" />
-                        <select name="c_p2">
-                            <option value="kpa">k Pa</option>
-                            <option value="mpa">M Pa</option>
-                            <option value="bar">Bar</option>
-                        </select>
-                    </div>
-                    <div className="full-problem-box-inner">
-                        <input className='full-problem-input' placeholder="P3" name="p3" type="number" step="0.1" />
-                        <select name="c_p3">
-                            <option value="kpa">k Pa</option>
-                            <option value="mpa">M Pa</option>
-                            <option value="bar">Bar</option>
-                        </select>
-                    </div>
-                    <div className="full-problem-box-inner">
-                        <input className='full-problem-input' placeholder="P4" name="p4" type="number" step="0.1" />
-                        <select name="c_p4">
-                            <option value="kpa">k Pa</option>
-                            <option value="mpa">M Pa</option>
-                            <option value="bar">Bar</option>
-                        </select>
-                    </div>
+                    <Pressure no="1" />
+                    <Pressure no="2" />
+                    <Pressure no="3" />
+                    <Pressure no="4" />
                 </div>
                 <div className='full-problem-box'>
                     <span className='full-problem-label'>Volume</span>
-                    <div className="full-problem-box-inner">
-                        <input className='full-problem-input' placeholder="V1" name="v1" type="number" step="0.1" />
-                        <select name="c_v1">
-                            <option value="m3">m³</option>
-                        </select>
-                    </div>
-                    <div className="full-problem-box-inner">
-                        <input className='full-problem-input' placeholder="V2" name="v2" type="number" step="0.1" />
-                        <select name="c_v2">
-                            <option value="m3">m³</option>
-                        </select>
-                    </div>
-                    <div className="full-problem-box-inner">
-                        <input className='full-problem-input' placeholder="V3" name="v3" type="number" step="0.1" />
-                        <select name="c_v3">
-                            <option value="m3">m³</option>
-                        </select>
-                    </div>
-                    <div className="full-problem-box-inner">
-                        <input className='full-problem-input' placeholder="V4" name="v4" type="number" step="0.1" />
-                        <select name="c_v4">
-                            <option value="m3">m³</option>
-                        </select>
-                    </div>
+                    <Volume no="1" />
+                    <Volume no="2" />
+                    <Volume no="3" />
+                    <Volume no="4" />
                 </div>
                 <div className='full-problem-box'>
                     <span className='full-problem-label'>Mass (M)</span>

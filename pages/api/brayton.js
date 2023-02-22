@@ -3,14 +3,16 @@ const Cv = 0.718
 const RCV = 0.287
 const GAMMA = 1.4
 class Brayton {
-    constructor({t1, t2, t3, t4, p1, p2, p3, p4, m, r, Qs, Qr, wd, 
-        efficiency, efficiency_percent, mep,
+    constructor({t1, t2, t3, t4, p1, p2, p3, p4, v1, v2, v3, v4,
+        m, r, Qs, Qr, wd, efficiency, efficiency_percent, mep,
         c_t1, c_t2, c_t3, c_t4, c_p1, c_p2, c_p3, c_p4,
-        c_qs, c_qr, c_wd, c_mep, c_m}) {
+        c_v1, c_v2, c_v3, c_v4, c_qs, c_qr, c_wd, c_mep, c_m}) {
         this.t1 = t1; this.t2 = t2; this.t3 = t3; this.t4 = t4
         this.p1 = p1; this.p2 = p2; this.p3 = p3; this.p4 = p4
+        this.v1 = v1; this.v2 = v2; this.v3 = v3; this.v4 = v4
         this.c_t1 = c_t1, this.c_t2 = c_t2, this.c_t3 = c_t3, this.c_t4 = c_t4,
         this.c_p1 = c_p1, this.c_p2 = c_p2, this.c_p3 = c_p3, this.c_p4 = c_p4,
+        this.c_v1 = c_v1, this.c_v2 = c_v2, this.c_v3 = c_v3, this.c_v4 = c_v4,
         this.c_qs = c_qs, this.c_qr = c_qr, this.c_wd = c_wd, this.c_mep = c_mep, this.c_m = c_m
         this.r = r, this.Qs = Qs, this.Qr = Qr, this.wd = wd, this.mep = mep
         this.m = m, this.efficiency = efficiency, this.efficiency_percent = efficiency_percent 
@@ -60,8 +62,10 @@ class Brayton {
         if (this.t1 === undefined) {
             if ((this.t2 !== undefined) && (this.r !== undefined)) {
                 this.t1 = this.t2 / (this.r ** ((GAMMA - 1)/GAMMA))
-                this.T2()
                 this.T4()
+            } else if ((this.Qs !== undefined) && (this.t4 !== undefined)) {
+                this.t1 = this.t4 - (this.Qr / (this.m * Cp))
+                this.T2()
             } else if ((this.Qs !== undefined) && (this.t4 !== undefined)) {
                 this.t1 = this.t4 - (this.Qr / (this.m * Cp))
                 this.T2()
@@ -72,6 +76,12 @@ class Brayton {
         if (this.t2 === undefined) {
             if ((this.t1 !== undefined) && (this.r !== undefined)) {
                 this.t2 = this.t1 * (this.r ** ((GAMMA - 1)/GAMMA))
+                this.T1()
+            } else if ((this.Qs !== undefined) && (this.t3 !== undefined)) {
+                this.t2 = this.t3 - (this.Qs / (this.m * Cp))
+                this.T1()
+            } else if ((this.v2 !== undefined) && (this.v3 !== undefined) && (this.t3 != undefined)) {
+                this.t2 = (this.v2 / this.v3) * this.t3
                 this.T1()
             } else if ((this.Qs !== undefined) && (this.t3 !== undefined)) {
                 this.t2 = this.t3 - (this.Qs / (this.m * Cp))
@@ -87,6 +97,9 @@ class Brayton {
             } if ((this.Qs !== undefined) && (this.t2 !== undefined)) {
                 this.t3 = (this.Qs / (this.m * Cp)) + this.t2
                 this.T4()
+            } else if ((this.Qs !== undefined) && (this.t2 !== undefined)) {
+                this.t3 = (this.Qs / (this.m * Cp)) + this.t2
+                this.T4()
             }
         }
     }
@@ -97,6 +110,12 @@ class Brayton {
                 this.T3()
             } else if ((this.Qs !== undefined) && (this.t1 !== undefined)) {
                 this.t4 = (this.Qr / (this.m * Cp)) + this.t1
+                this.T3()
+            } else if ((this.v4 !== undefined) && (this.v1 !== undefined) && (this.t1 != undefined)) {
+                this.t4 = (this.v4 / this.v1) * this.t1
+                this.T3()
+            } else if ((this.Qs !== undefined) && (this.t1 !== undefined)) {
+                this.t4 = this.t1 - (this.Qr / (this.m * Cp))
                 this.T3()
             }
         }
@@ -115,11 +134,52 @@ class Brayton {
             }
         }
     }
+    V1() {
+        if (this.v1 === undefined) {
+            if ((this.p1 !== undefined) && (this.t1 !== undefined)) {
+                this.v1 = (this.m * RCV * this.t1) / this.p1
+                if (this.v2 !== undefined) {
+                    this.MEP()
+                }
+            }
+        }
+    }
+    V2() {
+        if (this.v2 === undefined) {
+            if ((this.p2 !== undefined) && (this.t2 !== undefined)) {
+                this.v2 = (this.m * RCV * this.t2) / this.p2
+                if (this.v1 !== undefined) {
+                    this.MEP()
+                }
+            }
+        }
+    }
+    V3() {
+        if (this.v3 === undefined) {
+            if ((this.p3 !== undefined) && (this.t3 !== undefined)) {
+                this.v3 = (this.m * RCV * this.t3) / this.p3
+            }
+        }
+    }
+    V4() {
+        if (this.v4 === undefined) {
+            if ((this.p4 !== undefined) && (this.t4 !== undefined)) {
+                this.v4 = (this.m * RCV * this.t4) / this.p4
+            }
+        }
+    }
     QS() {
         if (this.Qs === undefined) {
             if ((this.t3 !== undefined) && (this.t2 !== undefined)) {
                 this.Qs = this.m * Cp * (this.t3 - this.t2)
                 this.WD()
+            } else if ((this.Qr !== undefined) && (this.mep !== undefined) && (this.v1 !== undefined) && (this.v2 !== undefined)) {
+                this.Qs = (this.mep * (this.v1 - this.v2)) + this.Qr
+                this.WD()
+            } else if ((this.efficiency !== undefined) && (this.wd !== undefined)) {
+                this.Qs = this.wd / this.efficiency
+                this.WD()
+                this.MEP()
             }
         }
     }
@@ -128,15 +188,29 @@ class Brayton {
             if ((this.t4 !== undefined) && (this.t1 !== undefined)) {
                 this.Qr = this.m * Cp * (this.t4 - this.t1)
                 this.WD()
+            } else if ((this.Qs !== undefined) && (this.mep !== undefined) && (this.v1 !== undefined) && (this.v2 !== undefined)) {
+                this.Qr = this.Qs - (this.mep * (this.v1 - this.v2))
+                this.WD()
             }
-        }
+    }
     }
     WD() {
         if (this.wd === undefined) {
             if ((this.efficiency !== undefined) && (this.Qs !== undefined)) {
                 this.wd = this.efficiency * this.Qs
+                this.MEP()
             } else if ((this.Qs !== undefined) && (this.Qr !== undefined)) {
                 this.wd = this.Qs - this.Qr
+                this.MEP()
+            } else if ((this.mep !== undefined) && (this.v1 !== undefined) && (this.v2 !== undefined)) {
+                this.wd = this.mep * (this.v1 - this.v2)
+            }
+        }
+    }
+    MEP() {
+        if (this.mep === undefined) {
+            if ((this.wd !== undefined) && (this.v1 !== undefined) && (this.v2 !== undefined)) {
+                this.mep = this.wd / (this.v1 - this.v2)
             }
         }
     }
@@ -153,13 +227,15 @@ class Brayton {
     }
     ai_calculate() {
         this.R()
-        this.T2(); this.T1(); this.P2(); this.P1();
+        this.T2(); this.T1(); this.P2(); this.P1(); this.V1(); this.V2(); this.V3(); this.V4();
+        this.T4(); this.T3();
         this.R()
-        this.T2(); this.T1(); this.P2(); this.P1();
+        this.T2(); this.T1(); this.P2(); this.P1(); this.V1(); this.V2(); this.V3(); this.V4();
         this.T4(); this.T3();
         this.QS(); this.QR()
         this.Efficiency()
         this.WD()
+        this.MEP()
     }
     convert() {
         for (var key in this) {

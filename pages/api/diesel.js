@@ -4,7 +4,7 @@ const RCV = 0.287
 const GAMMA = 1.4
 class Diesel {
     constructor({t1, t2, t3, t4, p1, p2, p3, p4, v1, v2, v3, v4,
-        m, r, Qs, Qr, wd, efficiency, efficiency_percent, mep,
+        m, r, rc, Qs, Qr, wd, efficiency, efficiency_percent, mep,
         c_t1, c_t2, c_t3, c_t4, c_p1, c_p2, c_p3, c_p4,
         c_v1, c_v2, c_v3, c_v4, c_qs, c_qr, c_wd, c_mep, c_m}) {
         this.t1 = t1; this.t2 = t2; this.t3 = t3; this.t4 = t4
@@ -14,30 +14,30 @@ class Diesel {
         this.c_p1 = c_p1, this.c_p2 = c_p2, this.c_p3 = c_p3, this.c_p4 = c_p4,
         this.c_v1 = c_v1, this.c_v2 = c_v2, this.c_v3 = c_v3, this.c_v4 = c_v4,
         this.c_qs = c_qs, this.c_qr = c_qr, this.c_wd = c_wd, this.c_mep = c_mep, this.c_m = c_m
-        this.r = r, this.Qs = Qs, this.Qr = Qr, this.wd = wd, this.mep = mep
+        this.r = r, this.rc = rc, this.Qs = Qs, this.Qr = Qr, this.wd = wd, this.mep = mep
         this.m = m, this.efficiency = efficiency, this.efficiency_percent = efficiency_percent 
         this.convert()
         if ((this.v1 === undefined) && (this.v4 !== undefined)) {
             this.v1 = this.v4
         }
-        if ((this.v2 === undefined) && (this.v3 !== undefined)) {
-            this.v2 = this.v3
-        }
         if ((this.v1 !== undefined) && (this.v4 === undefined)) {
             this.v4 = this.v1
         }
-        if ((this.v2 !== undefined) && (this.v3 === undefined)) {
-            this.v3 = this.v2
+        if ((this.p2 === undefined) && (this.p3 !== undefined)) {
+            this.p2 = this.p3
+        }
+        if ((this.p2 !== undefined) && (this.p3 === undefined)) {
+            this.p3 = this.p2
         }
         if (this.m === undefined) {
             this.m = 1
         }
-        if ((this.efficiency === undefined) && (this.efficiency_percent !== undefined)) {
-            this.efficiency = (this.efficiency_percent / 100)
-        }
         if ((this.r !== undefined) && (this.efficiency_percent !== undefined)) {
             this.efficiency = undefined
             this.efficiency_percent = undefined
+        }
+        if ((this.efficiency === undefined) && (this.efficiency_percent !== undefined)) {
+            this.efficiency = (this.efficiency_percent / 100)
         }
         this.ai_calculate()
         this.value()
@@ -50,17 +50,26 @@ class Diesel {
             } else if ((this.t2 !== undefined) && (this.t1 !== undefined)) {
                 this.r = (this.t2 / this.t1) ** (1 / (GAMMA - 1))
                 this.Efficiency()
-            } else if ((this.t3 !== undefined) && (this.t4 !== undefined)) {
-                this.r = (this.t3 / this.t4) ** (1 / (GAMMA - 1))
+            } else if ((this.t3 !== undefined) && (this.t1 !== undefined) && (this.rc != undefined)) {
+                this.r = (this.t3 / (this.t1 * this.rc)) ** (1 / (GAMMA - 1))
                 this.Efficiency()
             } else if ((this.p2 !== undefined) && (this.p1 !== undefined)) {
                 this.r = (this.p2 / this.p1) ** (1 / GAMMA)
                 this.Efficiency()
-            } else if ((this.p3 !== undefined) && (this.p4 !== undefined)) {
-                this.r = (this.p3 / this.p4) ** (1 / GAMMA)
+            }
+        }
+    }
+    RC() {
+        if (this.rc === undefined) {
+            if ((this.v3 !== undefined) && (this.v2 !== undefined)) {
+                this.rc = this.v3 / this.v2
                 this.Efficiency()
-            } else if (this.efficiency !== undefined) {
-                this.r = (1/(1-(this.efficiency_percent/100))) ** (1/(GAMMA-1))
+            } else if ((this.t3 !== undefined) && (this.t1 !== undefined) && (this.r != undefined)) {
+                this.rc = this.t3 / (this.t1 * (this.r ** (GAMMA-1)))
+                this.Efficiency()
+            } else if ((this.t3 !== undefined) && (this.t2 !== undefined)) {
+                this.rc = this.t3 / this.t2
+                this.Efficiency()
             }
         }
     }
@@ -69,60 +78,78 @@ class Diesel {
             if ((this.p1 !== undefined) && (this.v1 !== undefined)) {
                 this.t1 = (this.p1 * this.v1) / (this.m * RCV)
                 this.T2()
+                this.T3()
                 this.T4()
             } else if ((this.t4 !== undefined) && (this.p1 !== undefined) && (this.p4 !== undefined)) {
                 this.t1 = (this.p1 / this.p4) * this.t4
                 this.T2()
-                this.T4()
+                this.T3()
             } else if ((this.t2 !== undefined) && (this.r !== undefined)) {
                 this.t1 = this.t2 / (this.r ** (GAMMA - 1))
-                this.T2()
+                this.T3()
                 this.T4()
-            } else if ((this.Qs !== undefined) && (this.t4 !== undefined)) {
+            } else if ((this.Qr !== undefined) && (this.t4 !== undefined)) {
                 this.t1 = this.t4 - (this.Qr / (this.m * Cv))
+                this.T2()
+                this.T3()
+            } else if ((this.t3 !== undefined) && (this.rc !== undefined) && (this.r !== undefined)) {
+                this.t1 = this.t3 / (this.rc * (this.r ** (GAMMA-1)))
                 this.T2()
             }
         }
     }
     T2() {
         if (this.t2 === undefined) {
-            if ((this.t1 !== undefined) && (this.r !== undefined)) {
-                this.t2 = this.t1 * (this.r ** (GAMMA - 1))
+            if ((this.p2 !== undefined) && (this.v2 !== undefined)) {
+                this.t2 = (this.p2 * this.v2) / (this.m * RCV)
                 this.T1()
-            } else if ((this.t3 !== undefined) && (this.p2 !== undefined) && (this.p3 !== undefined)) {
-                this.t2 = (this.t3 / this.p3) * this.p2
+            } else if ((this.t1 !== undefined) && (this.r !== undefined)) {
+                this.t2 = this.t1 * (this.r ** (GAMMA - 1))
+            } else if ((this.t3 !== undefined) && (this.v2 !== undefined) && (this.v3 !== undefined)) {
+                this.t2 = (this.v2 / this.v3) * this.t3
                 this.T1()
             } else if ((this.Qs !== undefined) && (this.t3 !== undefined)) {
-                this.t2 = this.t3 - (this.Qs / (this.m * Cv))
+                this.t2 = this.t3 - (this.Qs / (this.m * Cp))
                 this.T1()
             }
         }
     }
     T3() {
         if (this.t3 === undefined) {
-            if ((this.t4 !== undefined) && (this.r !== undefined)) {
-                this.t3 = this.t4 * (this.r ** (GAMMA - 1))
-                this.T4()
-            } else if ((this.p3 !== undefined) && (this.p2 !== undefined) && (this.t2 !== undefined)) {
-                this.t3 = (this.p3 / this.p2) * this.t2
-                this.T4()
+            if ((this.p3 !== undefined) && (this.v3 !== undefined)) {
+                this.t3 = (this.p3 * this.v3) / (this.m * RCV)
+                this.T1()
+                this.P4()
+            } else if ((this.t1 !== undefined) && (this.r !== undefined) && (this.rc != undefined)) {
+                this.t3 = this.rc * this.t1 * (this.r ** (GAMMA - 1))
+                this.P4()
+            } else if ((this.v3 !== undefined) && (this.v2 !== undefined) && (this.t2 !== undefined)) {
+                this.t3 = (this.v3 / this.v2) * this.t2
+                this.T1()
+                this.P4()
             } else if ((this.Qs !== undefined) && (this.t2 !== undefined)) {
-                this.t3 = (this.Qs / (this.m * Cv)) + this.t2
-                this.T4()
+                this.t3 = (this.Qs / (this.m * Cp)) + this.t2
+                this.T1()
+                this.P4()
             }
         }
     }
     T4() {
         if (this.t4 === undefined) {
-            if ((this.p4 !== undefined) && (this.p1 !== undefined) && (this.t1 !== undefined)) {
+            if ((this.p4 !== undefined) && (this.v4 !== undefined)) {
+                this.t4 = (this.p4 * this.v4) / (this.m * RCV)
+                this.T1()
+                this.P4()
+            } else if ((this.p4 !== undefined) && (this.p1 !== undefined) && (this.t1 !== undefined)) {
                 this.t4 = (this.p4 / this.p1) * this.t1
-                this.T3()
-            } else if ((this.t3 !== undefined) && (this.r !== undefined)) {
-                this.t4 = this.t3 / (this.r ** (GAMMA - 1))
-                this.T3()
-            } else if ((this.Qs !== undefined) && (this.t1 !== undefined)) {
+                this.P4()
+            } else if ((this.t1 !== undefined) && (this.rc !== undefined)) {
+                this.t4 = this.t1 * (this.rc ** GAMMA)
+                this.P4()
+            } else if ((this.Qr !== undefined) && (this.t1 !== undefined)) {
                 this.t4 = this.t1 - (this.Qr / (this.m * Cv))
-                this.T3()
+                this.T1()
+                this.P4()
             }
         }
     }
@@ -131,51 +158,44 @@ class Diesel {
             if ((this.v1 !== undefined) && (this.t1 !== undefined)) {
                 this.p1 = (this.m * RCV * this.t1) / this.v1
                 this.P2()
-                this.P4()
             } else if ((this.t1 !== undefined) && (this.t4 !== undefined) && (this.p4 !== undefined)) {
                 this.p1 = (this.t1 / this.t4) * this.p4
                 this.P2()
-                this.P4()
             } else if ((this.p2 !== undefined) && (this.r !== undefined)) {
                 this.p1 = this.p2 / (this.r ** (GAMMA))
-                this.P2()
-                this.P4()
             }
         }
     }
     P2() {
         if (this.p2 === undefined) {
-            if ((this.p1 !== undefined) && (this.r !== undefined)) {
-                this.p2 = this.p1 * (this.r ** GAMMA)
-                this.P1()
-            } else if ((this.t2 !== undefined) && (this.t3 !== undefined) && (this.p3 !== undefined)) {
-                this.p2 = (this.t2 / this.t3) * this.p3
+            if ((this.v2 !== undefined) && (this.t2 !== undefined)) {
+                this.p3 = this.p2 = (this.m * RCV * this.t2) / this.v2
                 this.P1()
             }
         }
     }
     P3() {
         if (this.p3 === undefined) {
-            if ((this.p4 !== undefined) && (this.r !== undefined)) {
-                this.p3 = this.p4 * (this.r ** GAMMA)
+            if ((this.v3 !== undefined) && (this.t3 !== undefined)) {
+                this.p2 = this.p3 = (this.m * RCV * this.t3) / this.v3
                 this.P4()
-            } else if ((this.t3 !== undefined) && (this.t2 !== undefined) && (this.p2 !== undefined)) {
-                this.p3 = (this.t3 / this.t2) * this.p2
-                this.P4()
+            } else if ((this.p4 !== undefined) && (this.t3 !== undefined) && (this.t4 !== undefined)) {
+                this.p2 = this.p3 = this.p4 * ((this.t3 / this.t4)**(GAMMA/(GAMMA-1)))
             }
         }
     }
     P4() {
         if (this.p4 === undefined) {
-            if ((this.t4 !== undefined) && (this.t1 !== undefined) && (this.p1 !== undefined)) {
+            if ((this.v4 !== undefined) && (this.t4 !== undefined)) {
+                this.p4 = (this.m * RCV * this.t4) / this.v4
+                this.P3()
+                this.T3()
+            } else if ((this.t4 !== undefined) && (this.t1 !== undefined) && (this.p1 !== undefined)) {
                 this.p4 = (this.t4 / this.t1) * this.p1
                 this.P3()
-            } else if ((this.p1 !== undefined) && (this.t1 !== undefined) && (this.t4 !== undefined)) {
-                this.p4 = (this.p1 / this.t1) * this.t4
-                this.P3()
-            } else if ((this.p3 !== undefined) && (this.r !== undefined)) {
-                this.p4 = this.p3 / (this.r ** (GAMMA))
-                this.P3()
+                this.T3()
+            } else if ((this.p3 !== undefined) && (this.t3 !== undefined) && (this.t4 != undefined)) {
+                this.p4 = this.p3 / ((this.t3/this.t4) ** (GAMMA / (GAMMA-1)))
             }
         }
     }
@@ -186,24 +206,65 @@ class Diesel {
                 if (this.v2 !== undefined) {
                     this.MEP()
                 }
+                this.V2()
+            } else if ((this.r !== undefined) && (this.v2 !== undefined)) {
+                this.v4 = this.v1 = this.v2 * this.r
+                this.MEP()
+            } else if ((this.wd !== undefined) && (this.mep !== undefined) && (this.v2 !== undefined)) {
+                this.v4 = this.v1 = (this.wd / this.mep) + this.v2
             }
         }
     }
     V2() {
         if (this.v2 === undefined) {
-            if ((this.r !== undefined) && (this.v1 !== undefined)) {
-                this.v3 = this.v2 = this.v1 / this.r
+            if ((this.p2 !== undefined) && (this.t2 !== undefined)) {
+                this.v2 = (this.m * RCV * this.t2) / this.p2
+                if (this.v1 !== undefined) {
+                    this.MEP()
+                }
+                this.V3()
+            } else if ((this.r !== undefined) && (this.v1 !== undefined)) {
+                this.v2 = this.v1 / this.r
+                this.MEP()
+                this.V3()
+            } else if ((this.rc !== undefined) && (this.v3 !== undefined)) {
+                this.v2 = this.v3 / this.rc
+                if (this.v1 !== undefined) {
+                    this.MEP()
+                }
+            } else if ((this.wd !== undefined) && (this.mep !== undefined) && (this.v1 !== undefined)) {
+                this.v2 = this.v1 - (this.wd / this.mep)
+                this.V3()
+            } else if ((this.t3 !== undefined) && (this.t2 !== undefined) && (this.v3 != undefined)) {
+                this.v2 = (this.t2 / this.t3) * this.v3
                 if (this.v1 !== undefined) {
                     this.MEP()
                 }
             }
         }
     }
+    V3() {
+        if (this.v3 === undefined) {
+            if ((this.p3 !== undefined) && (this.t3 !== undefined)) {
+                this.v3 = (this.m * RCV * this.t3) / this.p3
+                this.V2()
+            } else if ((this.rc !== undefined) && (this.v2 !== undefined)) {
+                this.v3 = this.v2 * this.rc
+            }
+        }
+    }
     QS() {
         if (this.Qs === undefined) {
             if ((this.t3 !== undefined) && (this.t2 !== undefined)) {
-                this.Qs = this.m * Cv * (this.t3 - this.t2)
+                this.Qs = this.m * Cp * (this.t3 - this.t2)
                 this.WD()
+            } else if ((this.Qr !== undefined) && (this.mep !== undefined) && (this.v1 !== undefined) && (this.v2 !== undefined)) {
+                this.Qs = (this.mep * (this.v1 - this.v2)) + this.Qr
+                this.WD()
+            } else if ((this.efficiency !== undefined) && (this.wd !== undefined)) {
+                this.Qs = this.wd / this.efficiency
+                this.WD()
+                this.MEP()
             }
         }
     }
@@ -212,8 +273,11 @@ class Diesel {
             if ((this.t4 !== undefined) && (this.t1 !== undefined)) {
                 this.Qr = this.m * Cv * (this.t4 - this.t1)
                 this.WD()
+            } else if ((this.Qs !== undefined) && (this.mep !== undefined) && (this.v1 !== undefined) && (this.v2 !== undefined)) {
+                this.Qr = this.Qs - (this.mep * (this.v1 - this.v2))
+                this.WD()
             }
-        }
+    }
     }
     WD() {
         if (this.wd === undefined) {
@@ -222,6 +286,9 @@ class Diesel {
                 this.MEP()
             } else if ((this.Qs !== undefined) && (this.Qr !== undefined)) {
                 this.wd = this.Qs - this.Qr
+                this.MEP()
+            } else if ((this.mep !== undefined) && (this.v1 !== undefined) && (this.v2 !== undefined)) {
+                this.wd = this.mep * (this.v1 - this.v2)
             }
         }
     }
@@ -234,8 +301,8 @@ class Diesel {
     }
     Efficiency() {
         if (this.efficiency === undefined) {
-            if (this.r !== undefined) {
-                this.efficiency = 1 - (1 / (this.r ** (GAMMA - 1)))
+            if ((this.r !== undefined) && (this.rc != undefined)) {
+                this.efficiency = 1 - (1 / (GAMMA*(this.r ** (GAMMA - 1))) * (((this.rc**GAMMA) - 1) / (this.rc - 1)))
                 this.efficiency_percent = this.efficiency * 100
             } else if ((this.Qs !== undefined) && (this.wd !== undefined)) {
                 this.efficiency = this.wd / this.Qs
@@ -244,11 +311,12 @@ class Diesel {
         }
     }
     ai_calculate() {
-        this.R()
-        this.T2(); this.T1(); this.P2(); this.P1(); this.V1(); this.V2()
-        this.R()
-        this.T2(); this.T1(); this.P2(); this.P1(); this.V1(); this.V2()
-        this.T4(); this.P4(); this.T3(); this.P3()
+        this.R(); this.RC()
+        this.T2(); this.T1(); this.P4(); this.P3(); this.P2(); this.P1(); this.V1(); this.V2(); this.V3();
+        this.T4(); this.T3();
+        this.R(); this.RC()
+        this.T2(); this.T1(); this.P4(); this.P3(); this.P2(); this.P1(); this.V1(); this.V2(); this.V3();
+        this.T4(); this.T3();
         this.QS(); this.QR()
         this.Efficiency()
         this.WD()

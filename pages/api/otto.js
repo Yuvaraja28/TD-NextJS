@@ -32,12 +32,12 @@ class Otto {
         if (this.m === undefined) {
             this.m = 1
         }
-        if ((this.efficiency === undefined) && (this.efficiency_percent !== undefined)) {
-            this.efficiency = (this.efficiency_percent / 100)
-        }
         if ((this.r !== undefined) && (this.efficiency_percent !== undefined)) {
             this.efficiency = undefined
             this.efficiency_percent = undefined
+        }
+        if ((this.efficiency === undefined) && (this.efficiency_percent !== undefined)) {
+            this.efficiency = (this.efficiency_percent / 100)
         }
         this.ai_calculate()
         this.value()
@@ -73,10 +73,8 @@ class Otto {
             } else if ((this.t4 !== undefined) && (this.p1 !== undefined) && (this.p4 !== undefined)) {
                 this.t1 = (this.p1 / this.p4) * this.t4
                 this.T2()
-                this.T4()
             } else if ((this.t2 !== undefined) && (this.r !== undefined)) {
                 this.t1 = this.t2 / (this.r ** (GAMMA - 1))
-                this.T2()
                 this.T4()
             } else if ((this.Qs !== undefined) && (this.t4 !== undefined)) {
                 this.t1 = this.t4 - (this.Qr / (this.m * Cv))
@@ -86,9 +84,13 @@ class Otto {
     }
     T2() {
         if (this.t2 === undefined) {
-            if ((this.t1 !== undefined) && (this.r !== undefined)) {
-                this.t2 = this.t1 * (this.r ** (GAMMA - 1))
+            if ((this.p2 !== undefined) && (this.v2 !== undefined)) {
+                this.t2 = (this.p2 * this.v2) / (this.m * RCV)
                 this.T1()
+                this.T3()
+            } else if ((this.t1 !== undefined) && (this.r !== undefined)) {
+                this.t2 = this.t1 * (this.r ** (GAMMA - 1))
+                this.T3()
             } else if ((this.t3 !== undefined) && (this.p2 !== undefined) && (this.p3 !== undefined)) {
                 this.t2 = (this.t3 / this.p3) * this.p2
                 this.T1()
@@ -100,9 +102,13 @@ class Otto {
     }
     T3() {
         if (this.t3 === undefined) {
-            if ((this.t4 !== undefined) && (this.r !== undefined)) {
-                this.t3 = this.t4 * (this.r ** (GAMMA - 1))
+            if ((this.p3 !== undefined) && (this.v3 !== undefined)) {
+                this.t3 = (this.p3 * this.v3) / (this.m * RCV)
+                this.T2()
                 this.T4()
+            } else if ((this.t4 !== undefined) && (this.r !== undefined)) {
+                this.t3 = this.t4 * (this.r ** (GAMMA - 1))
+                this.T2()
             } else if ((this.p3 !== undefined) && (this.p2 !== undefined) && (this.t2 !== undefined)) {
                 this.t3 = (this.p3 / this.p2) * this.t2
                 this.T4()
@@ -114,12 +120,16 @@ class Otto {
     }
     T4() {
         if (this.t4 === undefined) {
-            if ((this.p4 !== undefined) && (this.p1 !== undefined) && (this.t1 !== undefined)) {
+            if ((this.p4 !== undefined) && (this.v4 !== undefined)) {
+                this.t4 = (this.p4 * this.v4) / (this.m * RCV)
+                this.T1()
+                this.T3()
+            } else if ((this.p4 !== undefined) && (this.p1 !== undefined) && (this.t1 !== undefined)) {
                 this.t4 = (this.p4 / this.p1) * this.t1
                 this.T3()
             } else if ((this.t3 !== undefined) && (this.r !== undefined)) {
                 this.t4 = this.t3 / (this.r ** (GAMMA - 1))
-                this.T3()
+                this.T1()
             } else if ((this.Qs !== undefined) && (this.t1 !== undefined)) {
                 this.t4 = this.t1 - (this.Qr / (this.m * Cv))
                 this.T3()
@@ -135,19 +145,19 @@ class Otto {
             } else if ((this.t1 !== undefined) && (this.t4 !== undefined) && (this.p4 !== undefined)) {
                 this.p1 = (this.t1 / this.t4) * this.p4
                 this.P2()
-                this.P4()
             } else if ((this.p2 !== undefined) && (this.r !== undefined)) {
                 this.p1 = this.p2 / (this.r ** (GAMMA))
-                this.P2()
                 this.P4()
             }
         }
     }
     P2() {
         if (this.p2 === undefined) {
-            if ((this.p1 !== undefined) && (this.r !== undefined)) {
-                this.p2 = this.p1 * (this.r ** GAMMA)
+            if ((this.v2 !== undefined) && (this.t2 !== undefined)) {
+                this.p2 = (this.m * RCV * this.t2) / this.v2
                 this.P1()
+            } else if ((this.p1 !== undefined) && (this.r !== undefined)) {
+                this.p2 = this.p1 * (this.r ** GAMMA)
             } else if ((this.t2 !== undefined) && (this.t3 !== undefined) && (this.p3 !== undefined)) {
                 this.p2 = (this.t2 / this.t3) * this.p3
                 this.P1()
@@ -156,9 +166,13 @@ class Otto {
     }
     P3() {
         if (this.p3 === undefined) {
-            if ((this.p4 !== undefined) && (this.r !== undefined)) {
-                this.p3 = this.p4 * (this.r ** GAMMA)
+            if ((this.v3 !== undefined) && (this.t3 !== undefined)) {
+                this.p3 = (this.m * RCV * this.t3) / this.v3
+                this.P2()
                 this.P4()
+            } else if ((this.p4 !== undefined) && (this.r !== undefined)) {
+                this.p3 = this.p4 * (this.r ** GAMMA)
+                this.P2()
             } else if ((this.t3 !== undefined) && (this.t2 !== undefined) && (this.p2 !== undefined)) {
                 this.p3 = (this.t3 / this.t2) * this.p2
                 this.P4()
@@ -167,15 +181,16 @@ class Otto {
     }
     P4() {
         if (this.p4 === undefined) {
-            if ((this.t4 !== undefined) && (this.t1 !== undefined) && (this.p1 !== undefined)) {
-                this.p4 = (this.t4 / this.t1) * this.p1
+            if ((this.v4 !== undefined) && (this.t4 !== undefined)) {
+                this.p4 = (this.m * RCV * this.t4) / this.v4
+                this.P1()
                 this.P3()
-            } else if ((this.p1 !== undefined) && (this.t1 !== undefined) && (this.t4 !== undefined)) {
-                this.p4 = (this.p1 / this.t1) * this.t4
+            } else if ((this.t4 !== undefined) && (this.t1 !== undefined) && (this.p1 !== undefined)) {
+                this.p4 = (this.t4 / this.t1) * this.p1
                 this.P3()
             } else if ((this.p3 !== undefined) && (this.r !== undefined)) {
                 this.p4 = this.p3 / (this.r ** (GAMMA))
-                this.P3()
+                this.P1()
             }
         }
     }
@@ -186,16 +201,26 @@ class Otto {
                 if (this.v2 !== undefined) {
                     this.MEP()
                 }
+            } else if ((this.r !== undefined) && (this.v2 !== undefined)) {
+                this.v4 = this.v1 = this.v2 * this.r
+                this.MEP()
+            } else if ((this.wd !== undefined) && (this.mep !== undefined) && (this.v2 !== undefined)) {
+                this.v4 = this.v1 = (this.wd / this.mep) + this.v2
             }
         }
     }
     V2() {
         if (this.v2 === undefined) {
-            if ((this.r !== undefined) && (this.v1 !== undefined)) {
-                this.v3 = this.v2 = this.v1 / this.r
-                if (this.v1 !== undefined) {
+            if ((this.p2 !== undefined) && (this.t2 !== undefined)) {
+                this.v3 = this.v2 = (this.m * RCV * this.t2) / this.p2
+                if (this.v4 !== undefined) {
                     this.MEP()
                 }
+            } else if ((this.r !== undefined) && (this.v1 !== undefined)) {
+                this.v3 = this.v2 = this.v1 / this.r
+                this.MEP()
+            } else if ((this.wd !== undefined) && (this.mep !== undefined) && (this.v1 !== undefined)) {
+                this.v3 = this.v2 = this.v1 - (this.wd / this.mep)
             }
         }
     }
@@ -204,6 +229,13 @@ class Otto {
             if ((this.t3 !== undefined) && (this.t2 !== undefined)) {
                 this.Qs = this.m * Cv * (this.t3 - this.t2)
                 this.WD()
+            } else if ((this.Qr !== undefined) && (this.mep !== undefined) && (this.v1 !== undefined) && (this.v2 !== undefined)) {
+                this.Qs = (this.mep * (this.v1 - this.v2)) + this.Qr
+                this.WD()
+            } else if ((this.efficiency !== undefined) && (this.wd !== undefined)) {
+                this.Qs = this.wd / this.efficiency
+                this.WD()
+                this.MEP()
             }
         }
     }
@@ -212,8 +244,11 @@ class Otto {
             if ((this.t4 !== undefined) && (this.t1 !== undefined)) {
                 this.Qr = this.m * Cv * (this.t4 - this.t1)
                 this.WD()
+            } else if ((this.Qs !== undefined) && (this.mep !== undefined) && (this.v1 !== undefined) && (this.v2 !== undefined)) {
+                this.Qr = this.Qs - (this.mep * (this.v1 - this.v2))
+                this.WD()
             }
-        }
+    }
     }
     WD() {
         if (this.wd === undefined) {
@@ -222,6 +257,9 @@ class Otto {
                 this.MEP()
             } else if ((this.Qs !== undefined) && (this.Qr !== undefined)) {
                 this.wd = this.Qs - this.Qr
+                this.MEP()
+            } else if ((this.mep !== undefined) && (this.v1 !== undefined) && (this.v2 !== undefined)) {
+                this.wd = this.mep * (this.v1 - this.v2)
             }
         }
     }
@@ -246,6 +284,7 @@ class Otto {
     ai_calculate() {
         this.R()
         this.T2(); this.T1(); this.P2(); this.P1(); this.V1(); this.V2()
+        this.T4(); this.P4(); this.T3(); this.P3()
         this.R()
         this.T2(); this.T1(); this.P2(); this.P1(); this.V1(); this.V2()
         this.T4(); this.P4(); this.T3(); this.P3()

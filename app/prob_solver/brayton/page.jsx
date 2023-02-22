@@ -52,14 +52,17 @@ export default function BraytonProblemPage() {
         <div className="mainframe">
             <span className="headline">Brayton Problem Solver</span>
             <span className="headline headline2">Enter the Known Values</span>
-            <div className="full-problem-container">
+            <div className="full-problem-container-multiple">
                 <div className='full-problem-box'>
                     <span className='full-problem-label'>Pressure Ratio (r)</span>
                     <input className='full-problem-input' placeholder="Pressure Ratio" name="r" type="number" step="0.1" />
-                    <br />
+                </div>
+                <div className='full-problem-box'>
                     <span className='full-problem-label'>Efficiency (%)</span>
                     <input className='full-problem-input' placeholder="%" name="efficiency_percent" type="number" step="0.1" />
                 </div>
+            </div>
+            <div className="full-problem-container-multiple">
                 <div className='full-problem-box'>
                     <span className='full-problem-label'>Temperature</span>
                     <Temperature no="1" />
@@ -81,16 +84,8 @@ export default function BraytonProblemPage() {
                     <Volume no="3" />
                     <Volume no="4" />
                 </div>
-                <div className='full-problem-box'>
-                    <span className='full-problem-label'>Mass (M)</span>
-                    <div className="full-problem-box-inner">
-                        <input className='full-problem-input' placeholder="Mass" name="m" type="number" step="0.1" />
-                        <select name="c_m">
-                            <option value="kg">kg</option>
-                            <option value="g">g</option>
-                        </select>
-                    </div>
-                </div>
+            </div>
+            <div className="full-problem-container-multiple">
                 <div className='full-problem-box'>
                     <span className='full-problem-label'>Heat Supplied (Qs)</span>
                     <div className="full-problem-box-inner">
@@ -99,7 +94,8 @@ export default function BraytonProblemPage() {
                             <option value="kj">kJ/kg</option>
                         </select>
                     </div>
-                    <br />
+                </div>
+                <div className='full-problem-box'>
                     <span className='full-problem-label'>Heat Rejected (Qr)</span>
                     <div className="full-problem-box-inner">
                         <input className='full-problem-input' placeholder="Qr" name="Qr" type="number" step="0.1" />
@@ -117,6 +113,8 @@ export default function BraytonProblemPage() {
                         </select>
                     </div>
                 </div>
+            </div>
+            <div className="full-problem-container-multiple">
                 <div className='full-problem-box'>
                     <span className='full-problem-label'>Mean Effective Pressure (M.E.P)</span>
                     <div className="full-problem-box-inner">
@@ -126,6 +124,18 @@ export default function BraytonProblemPage() {
                         </select>
                     </div>
                 </div>
+                <div className='full-problem-box'>
+                    <span className='full-problem-label'>Mass (M)</span>
+                    <div className="full-problem-box-inner">
+                        <input className='full-problem-input' placeholder="Mass" name="m" type="number" step="0.1" />
+                        <select name="c_m">
+                            <option value="kg">kg</option>
+                            <option value="g">g</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div className="full-problem-container-single">
                 <div className="full-problem-box-inner">
                     <button onClick={Clear} className="button">Clear</button> &nbsp;
                     <button onClick={Solve} className="button">Solve</button>

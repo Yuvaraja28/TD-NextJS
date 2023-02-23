@@ -55,7 +55,7 @@ export default function BraytonProblemPage() {
             <div className="full-problem-container-multiple">
                 <div className='full-problem-box'>
                     <span className='full-problem-label'>Pressure Ratio (r)</span>
-                    <input className='full-problem-input' placeholder="Pressure Ratio" name="r" type="number" step="0.1" />
+                    <input className='full-problem-input' placeholder="Pressure" name="r" type="number" step="0.1" />
                 </div>
                 <div className='full-problem-box'>
                     <span className='full-problem-label'>Efficiency (%)</span>

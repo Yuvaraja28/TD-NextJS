@@ -15,7 +15,7 @@ export default function TemperatureConversionPage() {
             if (convert == 'c_k') { Title(`${value} °C is equivalent to `); Output(`${(value+273.15).toFixed(2)} K`) }
             if (convert == 'k_c') { Title(`${value} K is equivalent to `); Output(`${(value-273.15).toFixed(2)} °C`) }
             if (convert == 'f_c') { Title(`${value} °F is equivalent to `); Output(`${((value-32)*(5/9)).toFixed(2)} °C`) }
-            if (convert == 'c_f') { Title(`${value} °C is equivalent to `); Output(`${((value*(5/9))+32).toFixed(2)} °F`) }
+            if (convert == 'c_f') { Title(`${value} °C is equivalent to `); Output(`${((value*(9/5))+32).toFixed(2)} °F`) }
             if (convert == 'k_f') { Title(`${value} K is equivalent to `); Output(`${(((value-273.15)*(9/5))+32).toFixed(2)} °F`) }
             if (convert == 'f_k') { Title(`${value} °F is equivalent to `); Output(`${(((value-32)*(5/9))+273.15).toFixed(2)} K`) }
       }

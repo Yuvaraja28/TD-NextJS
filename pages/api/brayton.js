@@ -180,6 +180,8 @@ class Brayton {
                 this.Qs = this.wd / this.efficiency
                 this.WD()
                 this.MEP()
+            } else if ((this.wd !== undefined) && (this.Qr !== undefined)) {
+                this.Qs = this.wd + this.Qr
             }
         }
     }
@@ -191,6 +193,8 @@ class Brayton {
             } else if ((this.Qs !== undefined) && (this.mep !== undefined) && (this.v1 !== undefined) && (this.v2 !== undefined)) {
                 this.Qr = this.Qs - (this.mep * (this.v1 - this.v2))
                 this.WD()
+            } else if ((this.wd !== undefined) && (this.Qs !== undefined)) {
+                this.Qr = this.Qs - this.wd
             }
     }
     }
@@ -229,12 +233,16 @@ class Brayton {
         this.R()
         this.T2(); this.T1(); this.P2(); this.P1(); this.V1(); this.V2(); this.V3(); this.V4();
         this.T4(); this.T3();
+        this.QS(); this.QR()
         this.R()
         this.T2(); this.T1(); this.P2(); this.P1(); this.V1(); this.V2(); this.V3(); this.V4();
         this.T4(); this.T3();
         this.QS(); this.QR()
-        this.Efficiency()
         this.WD()
+        this.Efficiency()
+        this.R()
+        this.WD()
+        this.QS(); this.QR()
         this.MEP()
     }
     convert() {

@@ -1,15 +1,15 @@
 'use client';
-export default function DieselProblemPage() {
+export default function DualProblemPage() {
     async function Solve() {
         let datas = {}
         let input_array = document.getElementsByClassName("full-problem-input")
         let option_array = document.getElementsByTagName("select")
         for (var i = 0; i < input_array.length; i++) { datas[input_array[i].name] = input_array[i].value }
         for (var i = 0; i < option_array.length; i++) { datas[option_array[i].name] = option_array[i].value }
-        let diesel_response = await fetch("/api/diesel", {method: 'POST', body: JSON.stringify(datas)})
-        let diesel_datas = await diesel_response.json()
-        for (var i = 0; i < input_array.length; i++) { if (diesel_datas[input_array[i].name] != "-") { input_array[i].value = diesel_datas[input_array[i].name] } }
-        for (var i = 0; i < option_array.length; i++) { if (diesel_datas[option_array[i].name] != "-") { option_array[i].value = diesel_datas[option_array[i].name] } }
+        let dual_response = await fetch("/api/dual", {method: 'POST', body: JSON.stringify(datas)})
+        let dual_datas = await dual_response.json()
+        for (var i = 0; i < input_array.length; i++) { if (dual_datas[input_array[i].name] != "-") { input_array[i].value = dual_datas[input_array[i].name] } }
+        for (var i = 0; i < option_array.length; i++) { if (dual_datas[option_array[i].name] != "-") { option_array[i].value = dual_datas[option_array[i].name] } }
     }
     async function Clear() {
         let input_array = document.getElementsByClassName("full-problem-input")
@@ -50,12 +50,16 @@ export default function DieselProblemPage() {
     }
     return (
         <div className="mainframe">
-            <span className="headline">Diesel Problem Solver</span>
+            <span className="headline">Dual Problem Solver</span>
             <span className="headline headline2">Enter the Known Values</span>
             <div className="full-problem-container-multiple">
                 <div className='full-problem-box'>
                     <span className='full-problem-label'>Compression Ratio (r)</span>
                     <input className='full-problem-input' placeholder="Compression" name="r" type="number" step="0.1" />
+                </div>
+                <div className='full-problem-box'>
+                    <span className='full-problem-label'>Pressure Ratio (Rp)</span>
+                    <input className='full-problem-input' placeholder="Pressure" name="rp" type="number" step="0.1" />
                 </div>
                 <div className='full-problem-box'>
                     <span className='full-problem-label'>Cut-Off Ratio (ρ)</span>
@@ -73,6 +77,7 @@ export default function DieselProblemPage() {
                     <Temperature no="2" />
                     <Temperature no="3" />
                     <Temperature no="4" />
+                    <Temperature no="5" />
                 </div>
                 <div className='full-problem-box'>
                     <span className='full-problem-label'>Pressure</span>
@@ -80,6 +85,7 @@ export default function DieselProblemPage() {
                     <Pressure no="2" />
                     <Pressure no="3" />
                     <Pressure no="4" />
+                    <Pressure no="5" />
                 </div>
                 <div className='full-problem-box'>
                     <span className='full-problem-label'>Volume</span>
@@ -87,6 +93,7 @@ export default function DieselProblemPage() {
                     <Volume no="2" />
                     <Volume no="3" />
                     <Volume no="4" />
+                    <Volume no="5" />
                 </div>
             </div>
             <div className="full-problem-container-multiple">

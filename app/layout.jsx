@@ -21,7 +21,7 @@ export default async function RootLayout({ children }) {
         </div>
         <footer>
           <div className='topbar'>
-            <span>Created by <a href="https://mybio.msc-bot.tech" className="link-glow" target="_blank" rel="noopener">Yuvaraja.M</a><br /><a href="https://mvit.edu.in/" className="link-glow" target="_blank" rel="noopener">⚡ MVIT ⚡</a> CSE-B</span>
+            <span>Created by <a href="https://yuvaraja28.me" className="link-glow" target="_blank" rel="noopener">Yuvaraja.M</a><br /><a href="https://mvit.edu.in/" className="link-glow" target="_blank" rel="noopener">⚡ MVIT ⚡</a> CSE-B</span>
           </div>
         </footer>
       </body>

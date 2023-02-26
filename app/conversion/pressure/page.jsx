@@ -20,6 +20,7 @@ export default function PressureConversionPage() {
       if (value != '') { 
             Error()
             let value = parseFloat(document.getElementById('value').value)
+            if (convert == 'kpa_mpa') { Title(`${value} k Pa is equivalent to `); Output(`${toPlainString(value/1000)} M Pa`) }
             if (convert == 'mpa_kpa') { Title(`${value} M Pa is equivalent to `); Output(`${toPlainString(value*1000)} k Pa`) }
             if (convert == 'kpa_atm') { Title(`${value} k Pa is equivalent to `); Output(`${toPlainString(value/101.325)} Atm`) }
             if (convert == 'atm_kpa') { Title(`${value} Atm is equivalent to `); Output(`${toPlainString(value*101.325)} k Pa`) }

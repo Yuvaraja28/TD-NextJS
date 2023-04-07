@@ -4,6 +4,9 @@ import Image from 'next/image'
 export default async function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Fugaz+One&family=Righteous&family=Comfortaa&display=swap" rel="stylesheet" />
+      </head>
       <body>
         <div className='topbar'>
           <Image className='logo'

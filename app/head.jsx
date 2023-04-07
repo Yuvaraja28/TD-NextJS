@@ -13,6 +13,8 @@ export default function Head() {
       <meta name="theme-color" content="#635985" />
       <link rel="icon" type="image/jpg" href="/favicon.png" />
       <meta name="keywords" content="thermodynamics, otto, diesel, brayton, dual, efficiency, problem solver, thermodynamics problem solver, otto cycle problem, diesel cycle problem, dual cycle problem, brayton cycle problem, pressure conversion, temperature conversion, dimension conversion, engine efficiency, otto engine, diesel engine, dual engine, brayton engine, manakula vinayagar institute, scimit, scimit23"/>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="true" />
     </>
   )
 }

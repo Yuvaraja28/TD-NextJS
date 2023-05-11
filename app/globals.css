@@ -217,6 +217,13 @@ body::-webkit-scrollbar-thumb {
     display: flex;
     flex-direction: row;
 }
+.mainframe .full-problem-box .full-problem-box-inner .label {
+    padding: 0.5em;
+    margin-top: 20px;
+    background-color: white;
+    color: black;
+    border-radius: 5px;
+}
 .mainframe .full-problem-box select {
     background-color: #443C68;
     border: 2px solid #18122B;
